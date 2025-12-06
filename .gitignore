@@ -1,0 +1,4 @@
+venv/
+others/
+csv/earthquakes.csv
+csv/earthquakes.parquet
