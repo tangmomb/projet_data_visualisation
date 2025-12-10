@@ -21,6 +21,12 @@ st.markdown(f"""
     background-color: transparent;
     margin-bottom: 15px;
 }}
+.highlight-box {{
+    border: 1px solid {BORDER_COLOR};
+    padding: 10px;
+    border-radius: 10px;
+    background-color: {BG_COLOR};
+}}
 ul {{
     margin-top: 0;
     margin-bottom: 0;
@@ -49,11 +55,7 @@ Dataset Kaggle
 
 # Afficher la forme
 st.markdown(f'''
-<div style="    
-    border: 1px solid {BORDER_COLOR};
-    padding: 10px;
-    border-radius: 10px;
-    background-color: {BG_COLOR};">
+<div class="highlight-box">
 <p style="margin: 0;">Nombre d'observations (séismes) : <span style="font-weight: bold; color: {TEXT_COLOR};">3 272 774</span> / Nombre de variables: <span style="font-weight: bold; color: {TEXT_COLOR};">22</span></p>
 </div>
 ''', unsafe_allow_html=True)
@@ -67,9 +69,15 @@ with st.expander("Exemple de données"):
     st.write("Extrait des données brutes (CSV) :")
     df_lite = pd.read_csv('data/earthquakes_lite.csv')
     st.dataframe(df_lite.tail(5), hide_index=True)
-    st.write("Le nettoyage se fait sur :")
-    st.markdown("- Les colonnes nst et magNst contiennent à la fois des 0 et des valeurs vides (NaN). Or dans ce dataset, 0 ne signifie pas 0 station, mais plutôt “information non fournie”, exactement comme NaN. Cette ambiguïté rend la colonne peu fiable et source de confusion, donc nous convertissons ces valeurs en NaN.")
-    st.markdown("- Vérification valeurs faussement différentes dans \"place\" (ex : Washington, washington, Washington DC) pour les regrouper sous une même appellation.")
+    st.markdown(f'''
+    <div class="highlight-box">
+    <p>Le nettoyage se fait sur :</p>
+    <ul>
+    <li>Les colonnes nst et magNst contiennent à la fois des 0 et des valeurs vides (NaN). Or dans ce dataset, 0 ne signifie pas 0 station, mais plutôt “information non fournie”, exactement comme NaN. Cette ambiguïté rend la colonne peu fiable et source de confusion, donc nous convertissons ces valeurs en NaN.</li>
+    <li>Vérification valeurs faussement différentes dans "place" (ex : central East Pacific Rise, Central East Pacific Rise) pour les regrouper sous une même appellation à des fins d'analyse cohérente.</li>
+    </ul>
+    </div>
+    ''', unsafe_allow_html=True)
     st.write("")
     st.write("Extrait des données après conversion des types et nettoyage (Parquet) :")
     df_converted = pd.read_parquet('data/earthquakes_lite.parquet')

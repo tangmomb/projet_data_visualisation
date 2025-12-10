@@ -2,8 +2,5 @@ venv/
 others/
 data/earthquakes.csv
 data/earthquakes.parquet
-data/STEP03_earthquakes.parquet
-data/STEP02_earthquakes.parquet
-data/STEP01_earthquakes.parquet
-data/STEP04_earthquakes.parquet
+data/STEP*_earthquakes.parquet
 earthquake_map.html
