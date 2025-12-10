@@ -86,29 +86,27 @@ with st.expander("Exemple de données"):
 # Afficher les significations des variables
 with st.expander("Significations des variables et types (après conversion du csv vers parquet)"):
     df_significations = pd.DataFrame([
-        ['time', 'datetime64', 'Moment exact du séisme. Souvent au format ISO 8601 (ex : 2025-02-03T14:32:12.345Z). UTC.'],
-        ['latitude', 'Float64', 'Coordonnées géographiques de l’épicentre du séisme. latitude : Nord/Sud'],
-        ['longitude', 'Float64', 'Coordonnées géographiques de l’épicentre du séisme. longitude : Est/Ouest'],
-        ['depth', 'Float64', 'Profondeur de l’hypocentre du séisme sous la surface terrestre. En kilomètres.'],
-        ['mag', 'Float64', 'Magnitude du séisme (taille/énergie).'],
-        ['magType', 'string', 'Type de magnitude utilisée : - Mw : magnitude de moment (la plus fiable) - ML : magnitude locale (Richter) - Mb : ondes de volume - Md : durée etc.'],
-        ['nst', 'Int64', 'Nombre de stations sismiques utilisées pour calculer la localisation du séisme.'],
-        ['gap', 'Float64', 'Angle "gap" en degrés : → indique la couverture par les stations autour de l’épicentre. → plus c’est bas, meilleure est la localisation du séisme.'],
-        ['dmin', 'Float64', 'Distance horizontale minimale entre l’épicentre et la station la plus proche. En degrés (coordonnées), pas en km.'],
-        ['rms', 'Float64', 'Résidu moyen (Root Mean Square) du modèle de localisation. Plus c’est faible, plus la localisation est précise.'],
-        ['net', 'string', 'Code du réseau sismique qui a reporté l’événement. (ex : us, ak, nc, etc.)'],
-        ['id', 'string', 'Identifiant unique du séisme dans la base de données.'],
-        ['updated', 'datetime64', 'Date de la dernière mise à jour de l’événement (par ex. corrections apportées après analyses).'],
-        ['place', 'string', 'Description textuelle de la localisation. Ex : "10 km NE of Los Angeles, California"'],
-        ['type', 'string', 'Type d’événement : - earthquake - quarry blast - explosion - ice quake etc.'],
-        ['horizontalError', 'Float64', 'Incertitude horizontale (latitude/longitude) en km.'],
-        ['depthError', 'Float64', 'Incertitude sur la profondeur (en km).'],
-        ['magError', 'Float64', 'Incertitude sur la magnitude.'],
-        ['magNst', 'Int64', 'Nombre de stations utilisées spécifiquement pour calculer la magnitude.'],
-        ['status', 'string', 'Statut du séisme : - automatic : détermination automatique, non révisée - reviewed : contrôlé par un sismologue'],
-        ['locationSource', 'string', 'Réseau qui a fourni la localisation.'],
-        ['magSource', 'string', 'Réseau qui a fourni la magnitude.']
-    ], columns=['Colonne', 'Type', 'Signification'])
+    ['date', 'datetime64', 'Moment exact du séisme. Souvent au format ISO 8601 (ex : 2025-02-03T14:32:12.345Z). UTC.'],
+    ['latitude', 'Float64', 'Coordonnées géographiques de l’épicentre du séisme. latitude : Nord/Sud'],
+    ['longitude', 'Float64', 'Coordonnées géographiques de l’épicentre du séisme. longitude : Est/Ouest'],
+    ['profondeur_km', 'Float64', 'Profondeur de l’hypocentre du séisme sous la surface terrestre. En kilomètres.'],
+    ['magnitude', 'Float64', 'Magnitude du séisme (taille/énergie).'],
+    ['type_magnitude', 'string', 'Type de magnitude utilisée : - Mw : magnitude de moment (la plus fiable) - ML : magnitude locale (Richter) - Mb : ondes de volume - Md : durée etc.'],
+    ['nb_stations_localisation', 'Int64', 'Nombre de stations sismiques utilisées pour calculer la localisation du séisme.'],
+    ['ecart_azimut', 'Float64', 'Angle "gap" en degrés : → indique la couverture par les stations autour de l’épicentre. → plus c’est bas, meilleure est la localisation du séisme.'],
+    ['distance_min', 'Float64', 'Distance horizontale minimale entre l’épicentre et la station la plus proche. En degrés (coordonnées), pas en km.'],
+    ['rms', 'Float64', 'Résidu moyen (Root Mean Square) du modèle de localisation. Plus c’est faible, plus la localisation est précise.'],
+    ['reseau', 'string', 'Code du réseau sismique qui a reporté l’événement. (ex : us, ak, nc, etc.)'],
+    ['ID', 'string', 'Identifiant unique du séisme dans la base de données.'],
+    ['date_maj_infos', 'datetime64', 'Date de la dernière mise à jour de l’événement (par ex. corrections apportées après analyses).'],
+    ['lieu', 'string', 'Description textuelle de la localisation. Ex : "10 km NE of Los Angeles, California"'],
+    ['type', 'string', 'Type d’événement : - earthquake - quarry blast - explosion - ice quake etc.'],
+    ['erreur_horiz', 'Float64', 'Incertitude horizontale (latitude/longitude) en km.'],
+    ['erreur_profondeur', 'Float64', 'Incertitude sur la profondeur (en km).'],
+    ['erreur_magnitude', 'Float64', 'Incertitude sur la magnitude.'],
+    ['nb_stations_magnitude', 'Int64', 'Nombre de stations utilisées spécifiquement pour calculer la magnitude.'],
+    ['mag_uniforme', 'Float64', 'Magnitude normalisée pour faciliter les comparaisons entre différents types de magnitude.'],
+], columns=['Colonne', 'Type', 'Signification'])
     st.dataframe(df_significations, hide_index=True, height=200)
 
 
