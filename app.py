@@ -73,8 +73,13 @@ with st.expander("Exemple de données"):
     <div class="highlight-box">
     <p>Le nettoyage se fait sur :</p>
     <ul>
-    <li>Les colonnes nst et magNst contiennent à la fois des 0 et des valeurs vides (NaN). Or dans ce dataset, 0 ne signifie pas 0 station, mais plutôt “information non fournie”, exactement comme NaN. Cette ambiguïté rend la colonne peu fiable et source de confusion, donc nous convertissons ces valeurs en NaN.</li>
-    <li>Vérification valeurs faussement différentes dans "place" (ex : central East Pacific Rise, Central East Pacific Rise) pour les regrouper sous une même appellation à des fins d'analyse cohérente.</li>
+    <li>Conversion des types de données (dates, numériques) et sauvegarde en Parquet pour une meilleure performance.</li>
+    <li>Suppression des doublons strictement identiques et des doublons sur l'ID unique.</li>
+    <li>Les colonnes nst et magNst contiennent à la fois des 0 et des valeurs vides (NaN). Or dans ce dataset, 0 ne signifie pas 0 station, mais plutôt "information non fournie", exactement comme NaN. Cette ambiguïté rend la colonne peu fiable et source de confusion, donc nous convertissons ces valeurs en NaN.</li>
+    <li>Vérification valeurs faussement différentes dans "place" (ex : central East Pacific Rise, Central East Pacific Rise) pour les regrouper sous une même appellation à des fins d'analyse cohérente, en normalisant les textes (suppression accents, ponctuation, espaces).</li>
+    <li>Ajout d'une colonne 'mag_uniforme' pour normaliser les magnitudes selon leur type (Mw, ML, etc.) afin de faciliter les comparaisons.</li>
+    <li>Suppression des colonnes que nous n'utiliserons pas : 'net', 'locationSource', 'magSource', 'status', 'dmin'. Le dataset est déjà suffisamment dense.</li>
+    <li>Réorganisation des colonnes et renommage en français pour une meilleure lisibilité.</li>
     </ul>
     </div>
     ''', unsafe_allow_html=True)
@@ -111,11 +116,16 @@ with st.expander("Significations des variables et types (après conversion du cs
 
 
 with st.expander("Quelques observations sur les données après nettoyage et conversion des types"):
+    df_full = pd.read_parquet('data/STEP07_earthquakes.parquet')
+    missing_values = df_full.isnull().sum()
+    columns = ['ID', 'date', 'lieu', 'magnitude', 'type_magnitude', 'latitude', 'longitude', 'profondeur_km', 'mag_uniforme', 'nb_stations_localisation', 'nb_stations_magnitude', 'ecart_azimut', 'rms', 'erreur_horiz', 'erreur_profondeur', 'erreur_magnitude', 'type', 'date_maj_infos']
+    missing_formatted = [f"{col} (<span style=\"font-weight: bold; color: {TEXT_COLOR};\">{missing_values[col]:,}</span>)".replace(",", " ") for col in columns if missing_values[col] > 0]
+    missing_text = ", ".join(missing_formatted)
     st.markdown(f'''
                 
     <!-- Observation -->    
     <div class="observation-box">
-    <p style="margin: 0;">Les variables suivantes ont des valeurs manquantes : ID (<span style="font-weight: bold; color: {TEXT_COLOR};">0</span>), date (<span style="font-weight: bold; color: {TEXT_COLOR};">0</span>), lieu (<span style="font-weight: bold; color: {TEXT_COLOR};">11</span>), magnitude (<span style="font-weight: bold; color: {TEXT_COLOR};">155 698</span>), type_magnitude (<span style="font-weight: bold; color: {TEXT_COLOR};">166 609</span>), latitude (<span style="font-weight: bold; color: {TEXT_COLOR};">0</span>), longitude (<span style="font-weight: bold; color: {TEXT_COLOR};">0</span>), profondeur_km (<span style="font-weight: bold; color: {TEXT_COLOR};">9</span>), mag_uniforme (<span style="font-weight: bold; color: {TEXT_COLOR};">701 438</span>), nb_stations_localisation (<span style="font-weight: bold; color: {TEXT_COLOR};">1 204 826</span>), nb_stations_magnitude (<span style="font-weight: bold; color: {TEXT_COLOR};">1 091 476</span>), ecart_azimut (<span style="font-weight: bold; color: {TEXT_COLOR};">834 294</span>), rms (<span style="font-weight: bold; color: {TEXT_COLOR};">210 659</span>), erreur_horiz (<span style="font-weight: bold; color: {TEXT_COLOR};">1 524 519</span>), erreur_profondeur (<span style="font-weight: bold; color: {TEXT_COLOR};">603 806</span>), erreur_magnitude (<span style="font-weight: bold; color: {TEXT_COLOR};">1 772 000</span>), type (<span style="font-weight: bold; color: {TEXT_COLOR};">0</span>), date_maj_infos (<span style="font-weight: bold; color: {TEXT_COLOR};">0</span>).</p>
+    <p style="margin: 0;">Les variables suivantes ont des valeurs manquantes : {missing_text}.</p>
     </div>
 
     ''', unsafe_allow_html=True)
