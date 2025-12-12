@@ -77,7 +77,7 @@ with st.expander("Exemple de données"):
     <li>Suppression des doublons strictement identiques et des doublons sur l'ID unique.</li>
     <li>Les colonnes nst et magNst contiennent à la fois des 0 et des valeurs vides (NaN). Or dans ce dataset, 0 ne signifie pas 0 station, mais plutôt "information non fournie", exactement comme NaN. Cette ambiguïté rend la colonne peu fiable et source de confusion, donc nous convertissons ces valeurs en NaN.</li>
     <li>Vérification valeurs faussement différentes dans "place" (ex : central East Pacific Rise, Central East Pacific Rise) pour les regrouper sous une même appellation à des fins d'analyse cohérente, en normalisant les textes (suppression accents, ponctuation, espaces).</li>
-    <li>Ajout d'une colonne 'mag_uniforme' pour normaliser les magnitudes selon leur type (Mw, ML, etc.) afin de faciliter les comparaisons.</li>
+    <li>Ajout d'une colonne 'mag_uniforme' pour normaliser les magnitudes selon leur type (Mw, ML, etc.) afin de faciliter les comparaisons. On calcule une magnitude uniforme approximative mais réaliste à des fins statistiques. Certains types de magnitude ne se prêtent pas à cette normalisation d'où les valeurs manquantes parfois.</li>
     <li>Suppression des colonnes que nous n'utiliserons pas : 'net', 'locationSource', 'magSource', 'status', 'dmin'. Le dataset est déjà suffisamment dense.</li>
     <li>Réorganisation des colonnes et renommage en français pour une meilleure lisibilité.</li>
     </ul>
@@ -156,95 +156,95 @@ st.divider()
 
 st.subheader("Statistiques descriptives")
 
-# # Diviser la page en 3 colonnes
-# col1, col2, col3 = st.columns(3)
+# Diviser la page en 3 colonnes
+col1, col2, col3 = st.columns(3)
 
-# with col1:
-#     # Charger les données avec mag_uniform
-#     df_uniform = pd.read_parquet('data/STEP04_earthquakes.parquet')
-#     df_uniform = df_uniform.dropna(subset=['mag_uniform'])  # Supprimer les NaN
+with col1:
+    # Charger les données avec mag_uniform
+    df_uniform = pd.read_parquet('data/STEP08_earthquakes.parquet')
+    df_uniform = df_uniform.dropna(subset=['mag_uniforme'])  # Supprimer les NaN
 
-#     # Calculer les statistiques
-#     stats = df_uniform['mag_uniform'].describe()
-#     q1 = stats['25%']
-#     median = stats['50%']
-#     q3 = stats['75%']
-#     min_val = stats['min']
-#     max_val = stats['max']
-#     mean_val = stats['mean']
+    # Calculer les statistiques
+    stats = df_uniform['mag_uniforme'].describe()
+    q1 = stats['25%']
+    median = stats['50%']
+    q3 = stats['75%']
+    min_val = stats['min']
+    max_val = stats['max']
+    mean_val = stats['mean']
 
-#     # Créer le boxplot pour mag_uniform (horizontal)
-#     fig2, ax2 = plt.subplots()
-#     ax2.boxplot(df_uniform['mag_uniform'], vert=False)
-#     ax2.set_title('Boxplot des magnitudes uniformisées')
-#     ax2.set_xlabel('Magnitude uniformisée')
-#     st.pyplot(fig2)
+    # Créer le boxplot pour mag_uniforme (horizontal)
+    fig2, ax2 = plt.subplots()
+    ax2.boxplot(df_uniform['mag_uniforme'], vert=False)
+    ax2.set_title('Boxplot des magnitudes uniformisées')
+    ax2.set_xlabel('Magnitude uniformisée')
+    st.pyplot(fig2)
 
-#     st.markdown(f'''
+    st.markdown(f'''
                 
-#     <!-- Observation -->
-#     <div class="observation-box">
-#     <p style="margin: 0;">Statistiques des magnitudes uniformisées : Min = {min_val:.2f}, Q1 = {q1:.2f}, Médiane = {median:.2f}, Moyenne = {mean_val:.2f}, Q3 = {q3:.2f}, Max = {max_val:.2f}.</p>
-#     </div>
+    <!-- Observation -->
+    <div class="observation-box">
+    <p style="margin: 0;">Statistiques des magnitudes uniformisées : Min = {min_val:.2f}, Q1 = {q1:.2f}, Médiane = {median:.2f}, Moyenne = {mean_val:.2f}, Q3 = {q3:.2f}, Max = {max_val:.2f}.</p>
+    </div>
 
-#     ''', unsafe_allow_html=True)
+    ''', unsafe_allow_html=True)
 
-# with col2:
-#     # Charger les données pour les statistiques
-#     df_stats = pd.read_parquet('data/STEP04_earthquakes.parquet')
-#     df_stats = df_stats.dropna(subset=['magType'])  # Supprimer les NaN dans magType
+with col2:
+    # Charger les données pour les statistiques
+    df_stats = pd.read_parquet('data/STEP08_earthquakes.parquet')
+    df_stats = df_stats.dropna(subset=['type_magnitude'])  # Supprimer les NaN dans magType
 
-#     # Compter les occurrences de chaque type de magnitude en pourcentage
-#     magtype_counts = df_stats['magType'].value_counts(normalize=True) * 100
+    # Compter les occurrences de chaque type de magnitude en pourcentage
+    magtype_counts = df_stats['type_magnitude'].value_counts(normalize=True) * 100
 
-#     # Grouper les valeurs < 3% dans "Others"
-#     others = magtype_counts[magtype_counts < 3].sum()
-#     magtype_counts = magtype_counts[magtype_counts >= 3]
-#     if others > 0:
-#         magtype_counts['Others'] = others
+    # Grouper les valeurs < 3% dans "Others"
+    others = magtype_counts[magtype_counts < 3].sum()
+    magtype_counts = magtype_counts[magtype_counts >= 3]
+    if others > 0:
+        magtype_counts['Others'] = others
 
-#     # Créer un graphique en barres
-#     fig, ax = plt.subplots()
-#     magtype_counts.plot(kind='bar', ax=ax)
-#     ax.set_title('Pourcentage d\'utilisations par type de magnitude')
-#     ax.set_xlabel('Type de magnitude')
-#     ax.set_ylabel('Pourcentage (%)')
-#     plt.xticks(rotation=45)
-#     st.pyplot(fig)
+    # Créer un graphique en barres
+    fig, ax = plt.subplots()
+    magtype_counts.plot(kind='bar', ax=ax)
+    ax.set_title('Pourcentage d\'utilisations par type de magnitude')
+    ax.set_xlabel('Type de magnitude')
+    ax.set_ylabel('Pourcentage (%)')
+    plt.xticks(rotation=45)
+    st.pyplot(fig)
 
-#     st.markdown(f'''
+    st.markdown(f'''
                 
-#     <!-- Observation -->
-#     <div class="observation-box">
-#     <p style="margin: 0;">On voit de multiples types de magnitude utilisés, ce qui peut compliquer l'analyse directe sans conversion uniforme. D'où la nouvelle colonne 'mag_uniform'.</p>
-#     </div>
+    <!-- Observation -->
+    <div class="observation-box">
+    <p style="margin: 0;">On voit de multiples types de magnitude utilisés, ce qui peut compliquer l'analyse directe sans conversion uniforme. D'où la nouvelle colonne 'mag_uniform'.</p>
+    </div>
 
-#     ''', unsafe_allow_html=True)
+    ''', unsafe_allow_html=True)
 
-# with col3:
-#     # Charger les données pour la carte des continents
-#     df_map = pd.read_parquet('data/STEP04_earthquakes.parquet')
-#     df_map = df_map.dropna(subset=['latitude', 'longitude'])
+with col3:
+    # Charger les données pour la carte des continents
+    df_map = pd.read_parquet('data/STEP08_earthquakes.parquet')
+    df_map = df_map.dropna(subset=['latitude', 'longitude'])
 
-#     # Créer un GeoDataFrame pour les points
-#     gdf_points = gpd.GeoDataFrame(df_map, geometry=gpd.points_from_xy(df_map.longitude, df_map.latitude), crs='EPSG:4326')
+    # Créer un GeoDataFrame pour les points
+    gdf_points = gpd.GeoDataFrame(df_map, geometry=gpd.points_from_xy(df_map.longitude, df_map.latitude), crs='EPSG:4326')
 
-#     # Charger la carte du monde
-#     url = "others/ne_110m_admin_0_countries.zip"
-#     world = gpd.read_file(url)
+    # Charger la carte du monde
+    url = "others/ne_110m_admin_0_countries.zip"
+    world = gpd.read_file(url)
 
-#     # Joindre spatialement pour obtenir le continent
-#     joined = gpd.sjoin(gdf_points, world, how='left', predicate='within')
+    # Joindre spatialement pour obtenir le continent
+    joined = gpd.sjoin(gdf_points, world, how='left', predicate='within')
 
-#     # Compter les tremblements par continent
-#     continent_counts = joined['CONTINENT'].value_counts()
+    # Compter les tremblements par continent
+    continent_counts = joined['CONTINENT'].value_counts()
 
-#     # Ajouter les counts à la carte du monde
-#     world['earthquake_count'] = world['CONTINENT'].map(continent_counts).fillna(0)
+    # Ajouter les counts à la carte du monde
+    world['earthquake_count'] = world['CONTINENT'].map(continent_counts).fillna(0)
 
-#     # Tracer la carte choroplèthe
-#     fig3, ax3 = plt.subplots(1, 1, figsize=(10, 6))
-#     world.plot(column='earthquake_count', ax=ax3, legend=True, cmap='Reds', edgecolor='black')
-#     ax3.set_title('Nombre de tremblements de terre par continent')
-#     ax3.set_axis_off()
-#     st.pyplot(fig3)
+    # Tracer la carte choroplèthe
+    fig3, ax3 = plt.subplots(1, 1, figsize=(10, 6))
+    world.plot(column='earthquake_count', ax=ax3, legend=True, cmap='Reds', edgecolor='black')
+    ax3.set_title('Nombre de tremblements de terre par continent')
+    ax3.set_axis_off()
+    st.pyplot(fig3)

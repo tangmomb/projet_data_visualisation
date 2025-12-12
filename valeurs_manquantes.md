@@ -39,7 +39,7 @@ Si depth = 0 :
 
 #### mag_uniforme — 701 438 manquants
 
-Magnitude uniformisée, manquante pour les séismes sans magnitude ou type de magnitude identifiable.
+Magnitude uniformisée. On calcule une magnitude uniforme approximative mais réaliste à des fins statistiques. Certains types de magnitude ne se prêtent pas à cette normalisation d'où les valeurs manquantes parfois.
 
 #### nb_stations_localisation — 1 204 826 manquants
 
