@@ -21,13 +21,13 @@ projet/
 ├── assets/
 │   ├── colonnes_significations.md      # Documentation des variables
 │   ├── valeurs_manquantes.md           # Analyse des valeurs manquantes
-│   ├── earthquake_map_areas.html       # Carte de densité (zones)
+│   └── earthquake_map_areas.html       # Carte de densité (zones)
 │
 ├── data/
 │   ├── earthquakes.csv                 # Dataset brut original
 │   ├── earthquakes_lite.csv            # Version allégée du dataset brut
 │   ├── earthquakes_lite.parquet        # Version allégée du dataset final
-│
+│   └── dataset à générer (trop lourd)
 │
 ├── scripts/
 │   ├── create_map_areas.py             # Script pour générer la heatmap de densité
