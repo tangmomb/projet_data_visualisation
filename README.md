@@ -24,10 +24,10 @@ projet/
 │   └── earthquake_map_areas.html       # Carte de densité (zones)
 │
 ├── data/
-│   ├── earthquakes.csv                 # Dataset brut original
+│   ├── earthquakes.csv                 # Dataset brut original à récupérer sur kaggle
 │   ├── earthquakes_lite.csv            # Version allégée du dataset brut
 │   ├── earthquakes_lite.parquet        # Version allégée du dataset final
-│   └── dataset à générer avec le notebook (trop lourd pour ici)
+│   └── dataset final à générer avec le notebook (trop lourd pour ici)
 │
 ├── scripts/
 │   ├── create_map_areas.py             # Script pour générer la heatmap de densité
