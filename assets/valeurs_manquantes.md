@@ -26,35 +26,23 @@ Magnitude uniformisée. On calcule une magnitude uniforme approximative mais ré
 
 #### nb_stations_localisation
 
-nst = nombre réel de stations utilisées dans le calcul.
+La plupart des réseaux modernes ne donnent plus l'information, ou ne la transmettent pas.
 
-👉 La plupart des réseaux modernes ne donnent plus nst, ou ne le transmettent pas.
-
-Donc :
-
-- nst manquant = inconnu / non rapporté (pas une erreur)
+manquant = inconnu / non rapporté (pas une erreur)
 
 Quand c’est 0, ça signifie « pas fourni », jamais « 0 station ».
 
 #### nb_stations_magnitude
 
-Nombre de stations utilisées uniquement pour calculer la magnitude.
-
 Très rarement fourni → normal qu'il manque à ~80%.
 
 #### ecart_azimut
-
-Gap = une mesure de qualité du réseau autour de l’épicentre.
-
-Pourquoi manquant ?
 
 - non fourni par certains algorithmes automatiques
 - certains réseaux n’utilisent pas cette mesure
 - valeurs anciennes avant les années 2000 → souvent vides
 
 #### rms
-
-RMS = qualité de l’ajustement des temps d’arrivée.
 
 Manque lorsque :
 
@@ -76,9 +64,13 @@ Très normal qu’elle soit manquante pour >90%.
 
 #### erreur_profondeur
 
-- beaucoup de séismes n’ont pas d’estimation de l’incertitude
+beaucoup de séismes n’ont pas d’estimation de l’incertitude
 
 #### erreur_magnitude
 
 La plupart des magnitudes automatiques ne fournissent pas d’erreur.
 C’est normal que 80–90% soit manquant.
+
+#### ressenti
+
+La colonne "ressenti" est vide principalement lorsque la magnitude uniformisée (mag_uniforme) est manquante. Sans cette information, il est impossible de déterminer si le séisme a été ressenti ou non.

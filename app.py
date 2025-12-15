@@ -42,7 +42,7 @@ st.set_page_config(layout="wide")
 
 st.title("Tremblements de terre aux USA  de 2000 à 2005")
 
-st.write("le dataset original traite des tremblements de terre dans le monde entier entre 1970 et mars 2019. Nous le travaillons pour nous concentrer sur les tremblements de terre enregistrés aux USA de 2000 à 2005. Les données proviennent de l'USGS (United States Geological Survey).")
+st.write("le dataset original traite des tremblements de terre dans le monde entier entre 1970 et mars 2019. Nous le travaillons pour nous concentrer sur les tremblements de terre enregistrés aux USA de 2000 à 2005 et avoir un nombre d'observations plus raisonnable. Les données proviennent de l'USGS (United States Geological Survey).")
 
 st.markdown(f'''
 <a href="https://www.kaggle.com/datasets/danielpe/earthquakes" target="_blank">
@@ -104,34 +104,32 @@ with st.expander("Exemple de données"):
 # Afficher les significations des variables
 with st.expander("Significations des variables et types (après conversion du csv vers parquet)"):
     df_significations = pd.DataFrame([
-    ['date', 'datetime64', 'Moment exact du séisme. Souvent au format ISO 8601 (ex : 2025-02-03T14:32:12.345Z). UTC.'],
-    ['latitude', 'Float64', 'Coordonnées géographiques de l’épicentre du séisme. latitude : Nord/Sud'],
-    ['longitude', 'Float64', 'Coordonnées géographiques de l’épicentre du séisme. longitude : Est/Ouest'],
-    ['profondeur_km', 'Float64', 'Profondeur de l’hypocentre du séisme sous la surface terrestre. En kilomètres.'],
-    ['magnitude', 'Float64', 'Magnitude du séisme (taille/énergie).'],
-    ['type_magnitude', 'string', 'Type de magnitude utilisée : - Mw : magnitude de moment (la plus fiable) - ML : magnitude locale (Richter) - Mb : ondes de volume - Md : durée etc.'],
-    ['nb_stations_localisation', 'Int64', 'Nombre de stations sismiques utilisées pour calculer la localisation du séisme.'],
-    ['ecart_azimut', 'Float64', 'Indique la couverture par les stations autour de l’épicentre. Plus c’est bas, meilleure est la localisation du séisme.'],
-    ['distance_min', 'Float64', 'Distance horizontale minimale entre l’épicentre et la station la plus proche. En degrés (coordonnées), pas en km.'],
-    ['rms', 'Float64', 'Résidu moyen (Root Mean Square) du modèle de localisation. Plus c’est faible, plus la localisation est précise.'],
-    ['reseau', 'string', 'Code du réseau sismique qui a reporté l’événement. (ex : us, ak, nc, etc.)'],
-    ['ID', 'string', 'Identifiant unique du séisme dans la base de données.'],
-    ['date_maj_infos', 'datetime64', 'Date de la dernière mise à jour de l’événement (par ex. corrections apportées après analyses).'],
-    ['lieu', 'string', 'Description textuelle de la localisation. Ex : "10 km NE of Los Angeles, California"'],
-    ['type', 'string', 'Type d’événement : - earthquake - quarry blast - explosion - ice quake etc.'],
-    ['erreur_horiz', 'Float64', 'Incertitude horizontale (latitude/longitude) en km.'],
-    ['erreur_profondeur', 'Float64', 'Incertitude sur la profondeur (en km).'],
-    ['erreur_magnitude', 'Float64', 'Incertitude sur la magnitude.'],
-    ['nb_stations_magnitude', 'Int64', 'Nombre de stations utilisées spécifiquement pour calculer la magnitude.'],
-    ['mag_uniforme', 'Float64', 'Magnitude normalisée pour faciliter les comparaisons entre différents types de magnitude.'],
-], columns=['Colonne', 'Type', 'Signification'])
+        ['ID', 'string', 'Identifiant unique du séisme dans la base de données.'],
+        ['date', 'datetime64', 'Moment exact du séisme. Souvent au format ISO 8601 (ex : 2025-02-03T14:32:12.345Z). UTC.'],
+        ['lieu', 'string', 'Description textuelle de la localisation. Ex : "10 km NE of Los Angeles, California"'],
+        ['magnitude', 'Float64', 'Magnitude du séisme (taille/énergie).'],
+        ['type_magnitude', 'string', 'Type de magnitude utilisée.'],
+        ['latitude', 'Float64', 'Coordonnées géographiques de l’épicentre du séisme. latitude : Nord/Sud'],
+        ['longitude', 'Float64', 'Coordonnées géographiques de l’épicentre du séisme. longitude : Est/Ouest'],
+        ['profondeur_km', 'Float64', 'Profondeur de l’hypocentre du séisme sous la surface terrestre. En kilomètres.'],
+        ['mag_uniforme', 'Float64', 'Magnitude normalisée pour faciliter les comparaisons entre différents types de magnitude.'],
+        ['nb_stations_localisation', 'Int64', 'Nombre de stations sismiques utilisées pour calculer la localisation du séisme.'],
+        ['nb_stations_magnitude', 'Int64', 'Nombre de stations utilisées spécifiquement pour calculer la magnitude.'],
+        ['ecart_azimut', 'Float64', 'Indique la couverture par les stations autour de l’épicentre. Plus c’est bas, meilleure est la localisation du séisme.'],
+        ['rms', 'Float64', 'Résidu moyen (Root Mean Square) du modèle de localisation. Plus c’est faible, plus la localisation est précise.'],
+        ['erreur_horiz', 'Float64', 'Incertitude horizontale (latitude/longitude) en km.'],
+        ['erreur_profondeur', 'Float64', 'Incertitude sur la profondeur (en km).'],
+        ['erreur_magnitude', 'Float64', 'Incertitude sur la magnitude.'],
+        ['ressenti', 'string', 'Indique si le séisme est probablement ressenti par l’humain selon des critères de magnitude et profondeur.'],
+        ['date_maj_infos', 'datetime64', 'Date de la dernière mise à jour de l’événement (par ex. corrections apportées après analyses).'],
+    ], columns=['Colonne', 'Type', 'Signification'])
     st.dataframe(df_significations, hide_index=True, height=200)
 
 
 with st.expander("Quelques observations sur les données après nettoyage et conversion des types"):
     df_full = pd.read_parquet('data/STEP11_earthquakes.parquet')
     missing_values = df_full.isnull().sum()
-    columns = ['ID', 'date', 'lieu', 'magnitude', 'type_magnitude', 'latitude', 'longitude', 'profondeur_km', 'mag_uniforme', 'nb_stations_localisation', 'nb_stations_magnitude', 'ecart_azimut', 'rms', 'erreur_horiz', 'erreur_profondeur', 'erreur_magnitude', 'date_maj_infos']
+    columns = ['ID', 'date', 'lieu', 'magnitude', 'type_magnitude', 'latitude', 'longitude', 'profondeur_km', 'mag_uniforme', 'nb_stations_localisation', 'nb_stations_magnitude', 'ecart_azimut', 'rms', 'erreur_horiz', 'erreur_profondeur', 'erreur_magnitude', 'ressenti', 'date_maj_infos']
     missing_formatted = [f"{col} (<span style=\"font-weight: bold; color: {TEXT_COLOR};\">{missing_values[col]:,}</span>)".replace(",", " ") for col in columns if missing_values[col] > 0]
     missing_text = ", ".join(missing_formatted)
     st.markdown(f'''
@@ -144,7 +142,7 @@ with st.expander("Quelques observations sur les données après nettoyage et con
     ''', unsafe_allow_html=True)
 
     # Charger le contenu du fichier Markdown
-    with open('valeurs_manquantes.md', 'r', encoding='utf-8') as f:
+    with open('assets/valeurs_manquantes.md', 'r', encoding='utf-8') as f:
         md_content = f.read()
         with st.popover("Voir pourquoi"):
             st.markdown(md_content)
@@ -161,7 +159,7 @@ with st.expander("Quelques observations sur les données après nettoyage et con
 st.divider()
 
 st.subheader("Densité des tremblements de terre aux USA de 2000 à 2005")
-with open('earthquake_map_areas.html', 'r') as f:
+with open('assets/earthquake_map_areas.html', 'r') as f:
     html_content = f.read()
 components.html(html_content, height=600)
 
@@ -362,7 +360,7 @@ with col3_suite:
 
 st.divider()
 
-st.subheader("Analyse des magnitudes par région")
+st.subheader("Analyse des séismes par état entre 2000 et 2005")
 
 # Charger les données
 df_earthquakes = pd.read_parquet('data/STEP11_earthquakes.parquet')
@@ -455,7 +453,8 @@ except Exception as e:
 
 st.divider()
 
-st.subheader("Résultat du text mining")
+st.subheader("Résultat du text mining de l'article :")
+st.write("https://journals.sagepub.com/doi/full/10.1177/87552930231223995")
 st.write("Notebook text_mining disponible dans le dossier 'scripts'.")
-st.image('scripts/wordcloud.png')
+st.image('assets/wordcloud.png')
     
