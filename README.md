@@ -3,7 +3,7 @@
 ## 📊 Description
 
 Analyse des tremblements de terre aux USA de 2000 à 2005.
-le dataset original traite des tremblements de terre dans le monde entier entre 1970 et mars 2019. Nous le travaillons pour nous concentrer sur les tremblements de terre enregistrés aux USA de 2000 à 2005 et avoir un nombre d'observations plus raisonnable. Les données proviennent de l'USGS (United States Geological Survey).
+Le dataset original traite des tremblements de terre dans le monde entier entre 1970 et mars 2019. Nous le travaillons pour nous concentrer sur les tremblements de terre enregistrés aux USA de 2000 à 2005 et avoir un nombre d'observations plus raisonnable. Les données proviennent de l'USGS (United States Geological Survey).
 
 <a href="https://www.kaggle.com/datasets/danielpe/earthquakes" target="_blank">
 <img src="https://www.kaggle.com/static/images/site-logo.svg" alt="Kaggle" style="height: 20px; vertical-align: middle; margin-right: 8px;"/>
