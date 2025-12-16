@@ -54,8 +54,8 @@ Dataset Kaggle
 ''', unsafe_allow_html=True)
 
 # Calculer le nombre d'observations et de variables à partir du CSV
-df_shape = pd.read_csv('data/earthquakes.csv', nrows=0)
-with open('data/earthquakes.csv', 'r', encoding='utf-8') as f:
+df_shape = pd.read_csv('data/consolidated_data.csv', nrows=0)
+with open('data/consolidated_data.csv', 'r', encoding='utf-8') as f:
     n_obs = sum(1 for _ in f) - 1  # -1 pour l'en-tête
 n_vars = len(df_shape.columns)
 
@@ -74,11 +74,11 @@ st.divider()
 
 st.subheader("Informations sur le dataset")
 
-# Afficher le début du parquet
+# Afficher les données brutes et nettoyées
 with st.expander("Exemple de données"):
     st.write("Extrait des données brutes (CSV) :")
-    df_lite = pd.read_csv('data/earthquakes_lite.csv')
-    st.dataframe(df_lite.tail(5), hide_index=True)
+    df_lite = pd.read_csv('data/consolidated_data.csv')
+    st.dataframe(df_lite.head(5), hide_index=True)
     st.markdown(f'''
     <div class="highlight-box">
     <p>Le nettoyage se fait sur :</p>
@@ -88,7 +88,7 @@ with st.expander("Exemple de données"):
     <li>Les colonnes nst et magNst contiennent à la fois des 0 et des valeurs vides (NaN). Or dans ce dataset, 0 ne signifie pas 0 station, mais plutôt "information non fournie", exactement comme NaN. Cette ambiguïté rend la colonne peu fiable et source de confusion, donc nous convertissons ces valeurs en NaN.</li>
     <li>Vérification valeurs faussement différentes dans "place" (ex : central East Pacific Rise, Central East Pacific Rise) pour les regrouper sous une même appellation à des fins d'analyse cohérente, en normalisant les textes (suppression accents, ponctuation, espaces).</li>
     <li>Ajout d'une colonne 'mag_uniforme' pour normaliser les magnitudes selon leur type (Mw, ML, etc.) afin de faciliter les comparaisons. On calcule une magnitude uniforme approximative mais réaliste à des fins statistiques. Certains types de magnitude ne se prêtent pas à cette normalisation d'où les valeurs manquantes parfois.</li>
-    <li>Suppression des colonnes que nous n'utiliserons pas : 'net', 'locationSource', 'magSource', 'status', 'dmin'. Le dataset est déjà suffisamment dense.</li>
+    <li>Suppression des colonnes que nous n'utiliserons pas : 'Unnamed: 0', 'net', 'locationSource', 'magSource', 'status', 'dmin'. Le dataset est déjà suffisamment dense.</li>
     <li>Réorganisation des colonnes et renommage en français pour une meilleure lisibilité.</li>
     <li>Suppression des évènements autres que "earthquake" et suppression de la colonne "type"</li>
     <li>Filtrage spatial pour ne garder que les séismes aux USA et dans un rayon de 50 km autour, de 2000 à 2005.</li>
@@ -98,8 +98,8 @@ with st.expander("Exemple de données"):
     ''', unsafe_allow_html=True)
     st.write("")
     st.write("Extrait des données après conversion des types et nettoyage (Parquet) :")
-    df_converted = pd.read_parquet('data/earthquakes_lite.parquet')
-    st.dataframe(df_converted.tail(5), hide_index=True)
+    df_converted = pd.read_parquet('data/STEP11_earthquakes.parquet')
+    st.dataframe(df_converted.head(5), hide_index=True)
 
 # Afficher les significations des variables
 with st.expander("Significations des variables et types (après conversion du csv vers parquet)"):
@@ -151,7 +151,7 @@ with st.expander("Quelques observations sur les données après nettoyage et con
                 
     <!-- Observation -->
     <div class="observation-box">
-    <p style="margin: 0;">Certaines villes ou lieux apparaissent plusieurs fois mais les coordonnées peuvent varier pour plus de précision. Voir l'exemple du Nevada ci-dessus.</p>
+    <p style="margin: 0;">Certaines villes ou lieux apparaissent plusieurs fois mais les coordonnées peuvent varier pour plus de précision. Voir l'exemple 'central california' ci-dessus.</p>
     </div>
 
     ''', unsafe_allow_html=True)

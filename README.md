@@ -10,31 +10,30 @@ le dataset original traite des tremblements de terre dans le monde entier entre 
 <span style="display: inline-block; background: #1e2629; color: white; padding: 6px 14px; border-radius: 4px; font-size: 14px; font-weight: bold; text-decoration: none;">Voir le dataset sur Kaggle</span>
 </a>
 
+## ⚠️ Important
+
+> **Avant de lancer l'application Streamlit**, vous devez exécuter toutes les cellules (run all) du notebook 'scripts\prepare_data.ipynb' pour préparer les données.
+
 ## 📁 Structure du Projet
 
 ```
 projet/
 ├── app.py                              # Application principale Streamlit
-├── README.md                           # Ce fichier
 ├── requirements.txt                    # Dépendances Python
 │
 ├── assets/
 │   ├── colonnes_significations.md      # Documentation des variables
 │   ├── valeurs_manquantes.md           # Analyse des valeurs manquantes
-│   └── earthquake_map_areas.html       # Carte de densité (zones)
+│   ├── earthquake_map_areas.html       # Carte de densité (zones)
+│   └── wordcloud.png                   # Résultat du text mining
 │
-├── data/
-│   ├── earthquakes.csv                 # Dataset brut original à récupérer sur kaggle
-│   ├── earthquakes_lite.csv            # Version allégée du dataset brut
-│   ├── earthquakes_lite.parquet        # Version allégée du dataset final
-│   └── STEP11_earthquakes.parquet      # Dataset final
+├── data/                               # sera généré avec le notebook
 │
 ├── scripts/
 │   ├── create_map_areas.py             # Script pour générer la heatmap de densité
 │   ├── explore_data.ipynb              # Notebook d'exploration
 │   ├── prepare_data.ipynb              # Notebook de préparation des données
-│   ├── text_mining.ipynb               # Notebook text mining
-│   └── wordcloud.png                   # Résultat du text mining
+│   └── text_mining.ipynb               # Notebook text mining
 ```
 
 ## 📦 Dépendances Principales
