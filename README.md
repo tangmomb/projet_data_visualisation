@@ -12,7 +12,7 @@ Le dataset original traite des tremblements de terre dans le monde entier entre 
 
 ## ⚠️ Important
 
-> **Avant de lancer l'application Streamlit**, vous devez exécuter toutes les cellules (run all) du notebook 'scripts\prepare_data.ipynb' pour préparer les données.
+> **Avant de lancer l'application Streamlit**, vous devez exécuter toutes les cellules (run all) du notebook 'scripts\prepare_data.ipynb' pour préparer les données. Les données brutes sont téléchargées et nettoyées.
 
 ## 📁 Structure du Projet
 
