@@ -73,4 +73,4 @@ C’est normal que 80–90% soit manquant.
 
 #### ressenti
 
-La colonne "ressenti" est vide principalement lorsque la magnitude uniformisée (mag_uniforme) est manquante. Sans cette information, il est impossible de déterminer si le séisme a été ressenti ou non.
+La colonne "ressenti" est vide principalement lorsque la magnitude uniformisée (mag_uniforme) est manquante car nous basons notre prédiction dessus.
